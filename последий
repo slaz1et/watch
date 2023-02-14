@@ -1,0 +1,73 @@
+unsigned long time;
+  unsigned long sec;
+  volatile int out_mode = 0;
+void setup()
+{
+ pinMode(9,OUTPUT);     
+  pinMode(10,OUTPUT);      
+  pinMode(8,OUTPUT);       
+  pinMode(6,OUTPUT);      
+  pinMode(7,OUTPUT);    
+  pinMode(11,OUTPUT);      
+  pinMode(5,OUTPUT);     
+  pinMode(4,OUTPUT);    
+ Serial.begin(9600);                         
+   pinMode(2, INPUT);
+   
+ Serial.begin(9600);
+  attachInterrupt(digitalPinToInterrupt(3), func, RISING);
+}
+
+void func(){
+ out_mode = !out_mode;
+ digitalWrite(4, out_mode); 
+ Serial.println(5);
+}
+void set_digit (int digit, int  pin) {
+//программа функция переводящая из 10тичнцю в двоичную и подоющие число в двоичной на 4 шину
+
+  digitalWrite(pin, 0);///обращение к индикатуру
+
+  for(int i = 0; i <= 3; ++i){
+      int bit= digit%2;
+      digit /= 2;
+      digitalWrite(8 + i, bit);
+    Serial.print(bit);
+  }
+  delay(5);  
+  digitalWrite(pin, 1);
+  Serial.println();
+}
+void get_digit(int x) {///x = 5
+
+  for(int i = 0; i <= 3; ++i){
+      int digit= x%10;  ///dig = 5
+      x /= 10;///x =
+      delay(20);
+      set_digit(digit, 7 - i);
+      Serial.println(digit);
+  }
+
+ Serial.println();
+}
+
+
+void loop()
+{
+ set_digit(1, 4);
+ set_digit(2, 5);
+ set_digit(3, 6);
+ set_digit(4, 7);
+
+   sec = millis() / 1000;
+
+Serial.print("Time: 11:15 ");
+  // æäåò ñåêóíäó, ïåðåä ñëåäóþùåé èòåðàöèåé öèêëà.
+  for (int i=0; i<1000; i++) {
+    while (sec == millis() / 1000) {
+Serial.println(sec);
+      get_digit(80);
+    }
+    sec = millis() / 1000;
+  }
+}
