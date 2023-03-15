@@ -1,0 +1,70 @@
+unsigned long time;
+  unsigned long sec;
+  volatile int out_mode = 0;
+void setup()
+{
+ pinMode(9,OUTPUT);     
+  pinMode(10,OUTPUT);      
+  pinMode(8,OUTPUT);       
+  pinMode(6,OUTPUT);      
+  pinMode(7,OUTPUT);    
+  pinMode(11,OUTPUT);      
+  pinMode(5,OUTPUT);     
+  pinMode(4,OUTPUT);    
+ Serial.begin(9600);                         
+   pinMode(2, INPUT);
+   
+ Serial.begin(9600);
+  attachInterrupt(digitalPinToInterrupt(3), func, RISING);
+}
+
+void func(){
+ out_mode = !out_mode;
+ digitalWrite(4, out_mode); 
+ Serial.println(5);
+}
+void set_digit (int digit, int  pin) {
+//программа функция переводящая из 10тичнцю в двоичную и подоющие число в двоичной на 4 шину
+
+  digitalWrite(pin, 0);///обращение к индикатуру
+
+  for(int i = 0; i <= 3; ++i){
+      ///int bit= digit%2;
+      
+      digitalWrite(8 + i, digit%2);
+      digit /= 2;
+    /////Serial.print(bit);
+  }
+  delay(1);  
+  digitalWrite(pin, 1);
+  Serial.println();
+}
+void get_digit(int x) {///x = 5
+
+  for(int i = 0; i <= 3; ++i){
+      set_digit(x%10, 4 + i);  ///dig = 5
+      x /= 10;///x =
+     // delay(1);
+      
+     /// Serial.println(digit);
+  }
+
+ Serial.println();
+}
+
+
+void loop()
+{
+ //set_digit(0, 4);
+ //set_digit(0, 5);
+ //set_digit(0, 6);
+ //set_digit(8, 7);
+  //digitalWrite(4, 1);
+  //digitalWrite(5, 1);
+  millis() / 1000;
+   sec = millis() / 1000;
+   get_digit(sec);
+   
+
+
+}
